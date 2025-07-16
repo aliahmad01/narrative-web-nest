@@ -12,75 +12,69 @@ const Index = () => {
   const displayedPosts = getPostsByCategory(selectedCategory);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg-background">
       <Header />
+      <Hero />
       
-      <main className="flex-1">
-        {/* Hero Section */}
-        <Hero />
-
-        {/* Featured Posts */}
+      <main className="max-w-7xl mx-auto px-6 py-16">
+        {/* Featured Story */}
         {featuredPosts.length > 0 && (
-          <section className="py-16 bg-secondary/10">
-            <div className="container mx-auto px-4">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-foreground mb-4">Featured Articles</h2>
-                <p className="text-muted-foreground max-w-2xl mx-auto">
-                  Discover our most popular and insightful content, carefully selected to help you stay ahead in the rapidly evolving world of web development.
+          <section className="mb-20">
+            <div className="flex items-center justify-between mb-12">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-4">Featured Story</h2>
+                <p className="text-muted-foreground text-lg">
+                  Our editor's pick for this week
                 </p>
               </div>
-              
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {featuredPosts.map((post) => (
-                  <BlogCard key={post.id} post={post} featured />
-                ))}
-              </div>
+            </div>
+            
+            <div className="mb-20">
+              <BlogCard post={featuredPosts[0]} variant="featured" />
             </div>
           </section>
         )}
-
-        {/* All Posts Section */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-foreground mb-4">Latest Articles</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Explore our complete collection of articles covering everything from frontend frameworks to design systems.
-              </p>
-            </div>
-
+        
+        {/* Latest Stories */}
+        <section>
+          <div className="mb-12">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-4">Latest Stories</h2>
+            <p className="text-muted-foreground text-lg mb-8">
+              Stay up to date with our latest thoughts and insights
+            </p>
+            
             {/* Category Filter */}
-            <div className="flex flex-wrap justify-center gap-2 mb-12">
+            <div className="flex flex-wrap gap-2">
               {categories.map((category) => (
                 <Button
                   key={category}
                   variant={selectedCategory === category ? "default" : "outline"}
                   onClick={() => setSelectedCategory(category)}
-                  className="transition-all duration-200"
+                  className="transition-all duration-200 rounded-lg"
+                  size="sm"
                 >
                   {category}
                 </Button>
               ))}
             </div>
-
-            {/* Posts Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {displayedPosts.map((post, index) => (
-                <div key={post.id} className="animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
-                  <BlogCard post={post} />
-                </div>
-              ))}
-            </div>
-
-            {displayedPosts.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">No articles found in this category.</p>
-              </div>
-            )}
           </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {displayedPosts.slice(1).map((post, index) => (
+              <div key={post.id} className="animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+                <BlogCard post={post} />
+              </div>
+            ))}
+          </div>
+
+          {displayedPosts.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">No articles found in this category.</p>
+            </div>
+          )}
         </section>
       </main>
-
+      
       <Footer />
     </div>
   );

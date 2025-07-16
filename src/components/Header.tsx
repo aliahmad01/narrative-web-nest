@@ -1,106 +1,64 @@
-import { useState } from "react";
-import { Search, Menu, X } from "lucide-react";
+import { Search, Menu, Moon, Sun } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "./ui/button";
+import { useState, useEffect } from "react";
 
-const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+export const Header = () => {
+  const [darkMode, setDarkMode] = useState(false);
 
-  const navigation = [
-    { name: "Home", href: "/" },
-    { name: "Technology", href: "/category/technology" },
-    { name: "Development", href: "/category/development" },
-    { name: "Design", href: "/category/design" },
-    { name: "Performance", href: "/category/performance" },
-  ];
+  useEffect(() => {
+    const isDark = localStorage.getItem('darkMode') === 'true';
+    setDarkMode(isDark);
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    localStorage.setItem('darkMode', newDarkMode.toString());
+    document.documentElement.classList.toggle('dark', newDarkMode);
+  };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-full bg-hero-gradient"></div>
-            <span className="text-xl font-bold bg-text-gradient bg-clip-text text-transparent">
-              ModernBlog
-            </span>
+    <header className="bg-background border-b border-border sticky top-0 z-50 backdrop-blur-md bg-opacity-90">
+      <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="flex items-center justify-between">
+          <Link to="/" className="text-2xl font-serif font-bold text-primary tracking-tight">
+            Inkwell
           </Link>
-
-          {/* Desktop Navigation */}
+          
           <nav className="hidden md:flex items-center space-x-8">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {item.name}
-              </Link>
-            ))}
+            <Link to="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium">
+              Home
+            </Link>
+            <Link to="/category/technology" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium">
+              Technology
+            </Link>
+            <Link to="/category/design" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium">
+              Design
+            </Link>
+            <Link to="/category/lifestyle" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium">
+              Lifestyle
+            </Link>
+            <Link to="/category/travel" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium">
+              Travel
+            </Link>
           </nav>
 
-          {/* Search and Mobile Menu */}
-          <div className="flex items-center space-x-4">
-            {/* Search Bar */}
-            <div className="relative hidden sm:block">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search articles..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 w-64"
-              />
-            </div>
-
-            {/* Mobile Menu Button */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="md:hidden"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
+          <div className="flex items-center space-x-2">
+            <Button variant="ghost" size="icon" className="h-9 w-9">
+              <Search className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-9 w-9" onClick={toggleDarkMode}>
+              {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
+            <Button variant="ghost" size="icon" className="md:hidden h-9 w-9">
+              <Menu className="h-4 w-4" />
             </Button>
           </div>
         </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden border-t animate-fade-in">
-            <div className="py-4 space-y-4">
-              {/* Mobile Search */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search articles..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-              
-              {/* Mobile Navigation Links */}
-              <nav className="flex flex-col space-y-3">
-                {navigation.map((item) => (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-              </nav>
-            </div>
-          </div>
-        )}
       </div>
     </header>
   );
